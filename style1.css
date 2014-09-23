@@ -1,0 +1,6 @@
+
+body{ font-family: Arial, Heveltica, sans-serif; }
+h1{ font-weight: bold; }
+h2{ border-top-style: solid;
+    text-decoration: underline;}
+ul{ list-style-type: disc; }
