@@ -4,3 +4,4 @@ h1{ font-weight: bold; }
 h2{ border-top-style: solid;
     text-decoration: underline;}
 ul{ list-style-type: disc; }
+#name{ font-size: 42px; }
