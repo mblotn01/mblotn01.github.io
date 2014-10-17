@@ -1,28 +1,48 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <title>Red Line</title>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="style.css">
+    <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?sensor=true">
+    </script>
+    <script type="text/javascript">
+      function initialize() {
+        var mapOptions = {
+          center: { lat: 42.376, lng: -71.055},
+          zoom: 11
+        };
+        var map = new google.maps.Map(document.getElementById('map-canvas'),
+            mapOptions);
+      }
+      google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
+
+    <script>
+
+      var xhr;
+      xhr = new XMLHttpRequest();
+
+      xhr.open("GET", "http://developer.mbta.com/lib/rthr/red.json", true);
+	    
+      xhr.onreadystatechange = function() {
+
+      console.log("status: "+xhr.status);
+	
+          if(xhr.readyState == 4 && xhr.status == 200){
+		alert("got data");
+
+          }
+
+      };
+      xhr.send();
 
 
-<head>
-	<title>Melissa Blotner</title>
-        <meta charset="UTF-8" />
-	<link rel="stylesheet" href="style_index.css">
-</head>
+    </script>
 
-<body>
-<h1>Melissa Blotner</h1>
-
-<p>
-<img src="melissapic.png" alt="Picture of Melissa" />
-</p>
-
-<p>
-<a href="resume.html">Resume</a>
-</p>
-
-<p>
-<a href="bio.html">Short Bio</a>
-</p>
-
-</body>
-
+  </head>
+  <body>
+<div id="map-canvas"></div>
+  </body>
 </html>
