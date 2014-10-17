@@ -42,6 +42,8 @@
       xhr = new XMLHttpRequest();
 
       xhr.open("POST", "http://chickenofthesea.herokuapp.com/sendlocation", true);
+
+      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	    
       xhr.onreadystatechange = function() {
 
@@ -49,8 +51,8 @@
 	
           if(xhr.readyState == 4 && xhr.status == 200){
 	
-			document.getElementById("results").innerHTML = xhr.response;
-
+		document.getElementById("results").innerHTML = xhr.response;
+		document.getElementById("myLocation").innerHTML = "My Latitude: "+latitude+" My Longitude: "+longitude;
 
           }
 
@@ -63,7 +65,7 @@
   </head>
   <body>
 <div id="map-canvas"></div>
-
+<p id="myLocation"></p>
 <p id="results"></p>
  
   </body>
