@@ -21,9 +21,12 @@
 
     <script>
 
+      var latitude;
+      var longitude;
+
       function success(position) {
-          var latitude = position.coords.latitude;
-          var longitude = position.coords.longitude;
+          latitude = position.coords.latitude;
+          longitude = position.coords.longitude;
 	  console.log("lat: "+latitude+"lon: "+longitude);
 
       }
@@ -33,7 +36,7 @@
 
       navigator.geolocation.getCurrentPosition(success, error);
 
-      var params = "login=Lucky&lat="+position.coords.latitude+"&lng="+position.coords.longitude;
+      var params = "login=Lucky&lat="+latitude+"&lng="+longitude;
 
       var xhr;
       xhr = new XMLHttpRequest();
