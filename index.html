@@ -29,13 +29,6 @@
           longitude = position.coords.longitude;
 	  console.log("lat: "+latitude+"lon: "+longitude);
 
-      }
-      function error() {
-	  alert("Unable to retreive your location");
-      }
-
-      navigator.geolocation.getCurrentPosition(success, error);
-console.log("lat: "+latitude+"lon: "+longitude);
 
       var params = "login=Lucky&lat="+latitude+"&lng="+longitude;
 
@@ -57,9 +50,20 @@ console.log("lat: "+latitude+"lon: "+longitude);
 
           }
 
-      };
-      xhr.send(params);
+   xhr.send(params);
 
+       };
+
+      }
+      function error() {
+	  alert("Unable to retreive your location");
+      }
+
+      navigator.geolocation.getCurrentPosition(success, error);
+console.log("lat: "+latitude+"lon: "+longitude);
+
+     
+   
 
     </script>
 
