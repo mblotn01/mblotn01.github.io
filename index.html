@@ -21,10 +21,24 @@
 
     <script>
 
+      function success(position) {
+          var latitude = position.coords.latitude;
+          var longitude = position.coords.longitude;
+	  console.log("lat: "+latitude+"lon: "+longitude);
+
+      }
+      function error() {
+	  alert("Unable to retreive your location");
+      }
+
+      navigator.geolocation.getCurrentPosition(success, error);
+
+      var params = "login=Lucky&lat="+latitude+"&lng="+longitude;
+
       var xhr;
       xhr = new XMLHttpRequest();
 
-      xhr.open("GET", "http://developer.mbta.com/lib/rthr/red.json", true);
+      xhr.open("POST", "http://chickenofthesea.herokuapp.com/sendlocation", true);
 	    
       xhr.onreadystatechange = function() {
 
@@ -36,7 +50,7 @@
           }
 
       };
-      xhr.send();
+      xhr.send(params);
 
 
     </script>
@@ -44,5 +58,7 @@
   </head>
   <body>
 <div id="map-canvas"></div>
+
+  
   </body>
 </html>
