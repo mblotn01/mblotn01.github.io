@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Red Line</title>
+    <title>Marauder's Map</title>
     <meta charset="UTF-8" />
     <link rel="stylesheet" href="style.css">
     <script type="text/javascript"
@@ -24,11 +24,13 @@
       var latitude;
       var longitude;
       var params;
+      var paramsLength;
 
       function success(position) {
           latitude = position.coords.latitude;
           longitude = position.coords.longitude;
 	  params = "login=Lucky&lat="+latitude+"&lng="+longitude;
+	  paramsLength = params.length;
 	  console.log("lat: "+latitude+"lon: "+longitude);
 
       }
@@ -44,7 +46,7 @@
       xhr.open("POST", "http://chickenofthesea.herokuapp.com/sendlocation", true);
 	   
       xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-      xhr.setRequestHeader("Content-length", params.length);
+      xhr.setRequestHeader("Content-length", paramsLength);
       xhr.setRequestHeader("Connection", "close");
 
       xhr.onreadystatechange = function() {
