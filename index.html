@@ -23,10 +23,12 @@
 
       var latitude;
       var longitude;
+      var params;
 
       function success(position) {
           latitude = position.coords.latitude;
           longitude = position.coords.longitude;
+	  params = "login=Lucky&lat="+latitude+"&lng="+longitude;
 	  console.log("lat: "+latitude+"lon: "+longitude);
 
       }
@@ -35,8 +37,6 @@
       }
 
       navigator.geolocation.getCurrentPosition(success, error);
-
-      var params = "login=Lucky&lat="+latitude+"&lng="+longitude;
 
       var xhr;
       xhr = new XMLHttpRequest();
