@@ -21,14 +21,20 @@
 
     <script>
 
-      var latitude;
-      var longitude;
+      var latitude = 0;
+      var longitude = 0;
 
       function success(position) {
           latitude = position.coords.latitude;
           longitude = position.coords.longitude;
 	  console.log("lat: "+latitude+"lon: "+longitude);
 
+      }
+      function error() {
+	  alert("Unable to retreive your location");
+      }
+
+      navigator.geolocation.getCurrentPosition(success, error);
 
       var params = "login=Lucky&lat="+latitude+"&lng="+longitude;
 
@@ -36,8 +42,6 @@
       xhr = new XMLHttpRequest();
 
       xhr.open("POST", "http://chickenofthesea.herokuapp.com/sendlocation", true);
-
-      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	    
       xhr.onreadystatechange = function() {
 
@@ -46,31 +50,18 @@
           if(xhr.readyState == 4 && xhr.status == 200){
 	
 		document.getElementById("results").innerHTML = xhr.response;
-		document.getElementById("myLocation").innerHTML = "My Latitude: "+latitude+" My Longitude: "+longitude;
-
           }
 
-   xhr.send(params);
+      };
 
-       };
-
-      }
-      function error() {
-	  alert("Unable to retreive your location");
-      }
-
-      navigator.geolocation.getCurrentPosition(success, error);
-console.log("lat: "+latitude+"lon: "+longitude);
-
-     
-   
+      xhr.send(params);
 
     </script>
 
   </head>
   <body>
 <div id="map-canvas"></div>
-<p id="myLocation"></p>
+
 <p id="results"></p>
  
   </body>
