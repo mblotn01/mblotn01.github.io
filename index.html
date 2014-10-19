@@ -15,10 +15,13 @@
         };
          map = new google.maps.Map(document.getElementById('map-canvas'),
             mapOptions);
+
+
+
       }
       google.maps.event.addDomListener(window, 'load', initialize);
 
-
+      var map;
       var latitude = 0;
       var longitude = 0;
       var params;
@@ -31,6 +34,7 @@
           longitude = position.coords.longitude;
 	  params = "login=Lucky&lat="+latitude+"&lng="+longitude;
 	  console.log("lat: "+latitude+"lon: "+longitude);
+	  sendRequest();
 
       }
       function error() {
@@ -39,6 +43,7 @@
 
       navigator.geolocation.getCurrentPosition(success, error);
 
+      function sendRequest() {
       var xhr;
       xhr = new XMLHttpRequest();
       xhr.open("POST", "http://chickenofthesea.herokuapp.com/sendlocation", true);
@@ -64,7 +69,7 @@
 	
       console.log("current params: "+params);
       xhr.send("login=Lucky&lat=42.405803&lng=-71.1245587");
-
+}
       
 
     </script>
