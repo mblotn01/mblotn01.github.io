@@ -28,6 +28,7 @@
       var dict;
       var characters;
       var students;
+      var marker;
 
       function success(position) {
           latitude = position.coords.latitude;
@@ -59,7 +60,8 @@
 
 		 marker = new google.maps.Marker({
 
-			position: { lat: characters[0]["loc"]["latitude"], lng: characters[0]["loc"]["longitude"]},
+			//position: { lat: characters[0]["loc"]["latitude"], lng: characters[0]["loc"]["longitude"]},
+			position: { lat: 42.405803, lng: -71.1245587}, 
 			map: map,
 			title: characters[0]["name"]
 			
