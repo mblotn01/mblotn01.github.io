@@ -29,6 +29,9 @@
       var characters;
       var students;
       var marker;
+      var character;
+      var charName;
+      var charLoc;
 
       function success(position) {
           latitude = position.coords.latitude;
@@ -57,9 +60,7 @@
 		dict = JSON.parse(xhr.response);
 		characters = dict["characters"];
 		students = dict["students"];
-		var character;
-		var charName;
-		var charLoc;
+
 
 		for(i = 0; i < characters.length; i++){
 			character = characters[i];
