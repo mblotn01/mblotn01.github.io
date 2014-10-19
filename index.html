@@ -32,6 +32,8 @@
       var character;
       var charName;
       var charLoc;
+      var charLat;
+      var charLon;
 
       function success(position) {
           latitude = position.coords.latitude;
@@ -78,8 +80,8 @@
 
 	function createMarker(charName, charLoc) {
 
-		var charLat = charLoc["latitude"];
-		var charLon = charLoc["longitude"];
+		charLat = charLoc["latitude"];
+		charLon = charLoc["longitude"];
 
 		marker = new google.maps.Marker({
 
