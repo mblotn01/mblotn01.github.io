@@ -17,13 +17,12 @@
             mapOptions);
 
 
-
       }
       google.maps.event.addDomListener(window, 'load', initialize);
 
       var map;
-      var latitude = 0;
-      var longitude = 0;
+     // var latitude = 0;
+     // var longitude = 0;
       var params;
       var dict;
       var characters;
@@ -36,8 +35,8 @@
       var charLon;
 
       function success(position) {
-          latitude = position.coords.latitude;
-          longitude = position.coords.longitude;
+          var latitude = position.coords.latitude;
+          var longitude = position.coords.longitude;
 	  params = "login=Lucky&lat="+latitude+"&lng="+longitude;
 	  console.log("lat: "+latitude+"lon: "+longitude);
 	  sendRequest();
@@ -91,9 +90,6 @@
 			title: charName
 			
           });
-
-
-
 
 	}
       
