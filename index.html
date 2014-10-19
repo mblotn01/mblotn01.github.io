@@ -49,8 +49,15 @@
           if(xhr.readyState == 4 && xhr.status == 200){
 		document.getElementById("results").innerHTML = xhr.response;
 		dict = JSON.parse(xhr.response);
-		characters = dict[0];
-		students = dict[1];
+		characters = dict["characters"];
+		students = dict["students"];
+
+		var marker = new google.maps.Marker({
+
+			position: { lat: characters[0]["loc"]["latitude"], lng: characters[0]["loc"]["longitude"],
+			map: map,
+			title: characters[0]["name"]
+		});
           }
       };
 console.log("current params: "+params);
