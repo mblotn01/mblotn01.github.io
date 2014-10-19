@@ -57,21 +57,42 @@
 		dict = JSON.parse(xhr.response);
 		characters = dict["characters"];
 		students = dict["students"];
+		var character;
+		var charName;
+		var charLoc;
 
-		 marker = new google.maps.Marker({
+		for(int i = 0; i < characters.length; i++){
+			character = characters[i];
+			charName = character["name"];
+			charLoc = character["loc"];
+			createMarker(charName, charLoc);
+		}
 
-			//position: { lat: characters[0]["loc"]["latitude"], lng: characters[0]["loc"]["longitude"]},
-			position: { lat: 42.405803, lng: -71.1245587}, 
-			map: map,
-			title: characters[0]["name"]
-			
-          });
-      }
+          }
       }
 	
       console.log("current params: "+params);
       xhr.send("login=Lucky&lat=42.405803&lng=-71.1245587");
 }
+
+	function createMarker(charName, charLoc) {
+
+		var charLat = charLoc["latitude"];
+		var charLon = charLon["longitude"];
+
+		marker = new google.maps.Marker({
+
+			//position: { lat: characters[0]["loc"]["latitude"], lng: characters[0]["loc"]["longitude"]},
+			position: { lat: charLat, lng: charLon}, 
+			map: map,
+			title: charName
+			
+          });
+
+
+
+
+	}
       
 
     </script>
