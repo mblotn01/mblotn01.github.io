@@ -24,15 +24,15 @@
      // var latitude = 0;
      // var longitude = 0;
      // var params;
-      var dict;
-      var characters;
-      var students;
+     //var dict;
+     //var characters;
+     // var students;
       var marker;
-      var character;
-      var charName;
-      var charLoc;
-      var charLat;
-      var charLon;
+      //var character;
+      //var charName;
+      //var charLoc;
+      //var charLat;
+      //var charLon;
 
       function success(position) {
           var latitude = position.coords.latitude;
@@ -49,7 +49,9 @@
       navigator.geolocation.getCurrentPosition(success, error);
 
       function sendRequest(params) {
+
       var xhr;
+ 
       xhr = new XMLHttpRequest();
       xhr.open("POST", "http://chickenofthesea.herokuapp.com/sendlocation", true);
       xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
@@ -58,11 +60,13 @@
           console.log("status: "+xhr.status);
           if(xhr.readyState == 4 && xhr.status == 200){
 		document.getElementById("results").innerHTML = xhr.response;
-		dict = JSON.parse(xhr.response);
-		characters = dict["characters"];
-		students = dict["students"];
+		var dict = JSON.parse(xhr.response);
+		var characters = dict["characters"];
+		var students = dict["students"];
 
-
+		var character;
+		var charName;
+		var charLoc;
 		for(i = 0; i < characters.length; i++){
 			console.log("in character loop");
 			character = characters[i];
@@ -77,22 +81,22 @@
       console.log("current params: "+params);
       //xhr.send("login=Lucky&lat=42.405803&lng=-71.1245587");
       xhr.send(params);
-}
+     }
 
-	function createMarker(charName, charLoc) {
+     function createMarker(charName, charLoc) {
 
-		charLat = charLoc["latitude"];
-		charLon = charLoc["longitude"];
+	var charLat = charLoc["latitude"];
+	var charLon = charLoc["longitude"];
 
-		marker = new google.maps.Marker({
+	marker = new google.maps.Marker({
 
-			position: { lat: charLat, lng: charLon}, 
-			map: map,
-			title: charName
+		position: { lat: charLat, lng: charLon}, 
+		map: map,
+		title: charName
 			
-          });
+        });
 
-	}
+     }
       
 
     </script>
