@@ -37,9 +37,9 @@
       function success(position) {
           var latitude = position.coords.latitude;
           var longitude = position.coords.longitude;
-	  params = "login=Lucky&lat="+latitude+"&lng="+longitude;
+	  var params = "login=Lucky&lat="+latitude+"&lng="+longitude;
 	  console.log("lat: "+latitude+"lon: "+longitude);
-	  sendRequest();
+	  sendRequest(params);
 
       }
       function error() {
@@ -48,7 +48,7 @@
 
       navigator.geolocation.getCurrentPosition(success, error);
 
-      function sendRequest() {
+      function sendRequest(params) {
       var xhr;
       xhr = new XMLHttpRequest();
       xhr.open("POST", "http://chickenofthesea.herokuapp.com/sendlocation", true);
@@ -75,7 +75,8 @@
       }
 	
       console.log("current params: "+params);
-      xhr.send("login=Lucky&lat=42.405803&lng=-71.1245587");
+      //xhr.send("login=Lucky&lat=42.405803&lng=-71.1245587");
+      xhr.send(params);
 }
 
 	function createMarker(charName, charLoc) {
