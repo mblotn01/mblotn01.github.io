@@ -74,7 +74,7 @@
      function createStudentMarker(student) {
 
 	var studName = student["login"];
-	var studTime = studLoc["created_at"];
+	var studTime = student["created_at"];
 	var studLat = student["lat"];
 	var studLon = student["lng"];
 
@@ -98,9 +98,6 @@
 	google.maps.event.addListener(marker, 'click', function() {
     		infoWindow.open(map,marker);
         });
-
-
-
 
      }
 
