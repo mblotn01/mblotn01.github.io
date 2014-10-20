@@ -21,12 +21,18 @@
       google.maps.event.addDomListener(window, 'load', initialize);
      
       var map;
+      var myLat;
+      var myLon;
+      var distances;
 
       function success(position) {
           var latitude = position.coords.latitude;
           var longitude = position.coords.longitude;
+
+	  myLat = latitude;
+	  myLon = longitude;
+
 	  var params = "login=Lucky&lat="+latitude+"&lng="+longitude;
-	  console.log("lat: "+latitude+"lon: "+longitude);
 	  createMyMarker(latitude, longitude);
 	  sendRequest(params);
 
@@ -46,9 +52,8 @@
       xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
  
       xhr.onreadystatechange = function() {
-          console.log("status: "+xhr.status);
           if(xhr.readyState == 4 && xhr.status == 200){
-		document.getElementById("results").innerHTML = xhr.response;
+		//document.getElementById("results").innerHTML = xhr.response;
 		var dict = JSON.parse(xhr.response);
 		var characters = dict["characters"];
 		var students = dict["students"];
@@ -64,7 +69,7 @@
 			student = students[i];
 			createStudentMarker(student);
 		}
-
+               document.getElementById("results").innerHTML = getDistanceHTML();
           }
       }
 	
@@ -110,6 +115,7 @@
 	var charLon = charLoc["longitude"];
 	var image;
 	var realName;
+	var distance;
 
 	if(charName == "carmen"){
 		realName = "Carmen Sandiego";
@@ -158,12 +164,26 @@
     		infoWindow.open(map,marker);
         });
 
+	var polyCoords = [{lat: myLat, lng: myLon},{lat: charLat, lng: charLon}]
+
+	var polyline = new google.maps.Polyline({
+ 		path: polyCoords,
+   		geodesic: true,
+    		strokeColor: '#FF0000',
+    		strokeOpacity: 1.0,
+    		strokeWeight: 2
+  	});
+
+  	polyline.setMap(map);
+
+	distance = calculateDistance(charLat, charLon);
+	distances.push([realName, distance]);
 
      }
 
     function createMyMarker(myLat, myLon) {
 
-	var image = 'icons/zac.jpg';
+	var image = 'icons/bugs.jpeg';
 	var marker = new google.maps.Marker({
 
 		position: { lat: myLat, lng: myLon}, 
@@ -186,7 +206,59 @@
 
      }
 
-      
+  
+   function calculateDistance(charLat, charLon){
+
+	Number.prototype.toRad = function() {
+  		return this * Math.PI / 180;
+	}
+
+	var lat2 = charLat; 
+	var lon2 = charLon 
+	var lat1 = myLat; 
+	var lon1 = myLon; 
+
+	var R = 3959; // miles 
+	var x1 = lat2-lat1;
+	var dLat = x1.toRad();  
+	var x2 = lon2-lon1;
+	var dLon = x2.toRad();  
+	var a = Math.sin(dLat/2) * Math.sin(dLat/2) + 
+                Math.cos(lat1.toRad()) * Math.cos(lat2.toRad()) * 
+                Math.sin(dLon/2) * Math.sin(dLon/2);  
+	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+	var d = R * c; 
+
+	return d;
+
+   }
+   
+   function getDistanceHTML(){
+
+	var distHTMLString = "<h3>Distances (miles)</h3>";
+	var charName;
+	var dist;
+
+   	distances.sort(sortByDistance);
+
+	for(i = 0; i < distances.length; i++){
+
+		charName = distances[i][0];
+		dist = distances[i][1];
+		distHTMLString = distHTMLString + "<p>"+charName+": "+dist+"</p>";
+	}
+
+	return distHTMLString;
+   } 
+
+   function sortByDistance(a, b) {
+    if (a[1] === b[1]) {
+        return 0;
+    }
+    else {
+        return (a[1] < b[1]) ? -1 : 1;
+    }
+}
 
     </script>
 
