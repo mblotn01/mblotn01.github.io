@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Marauder's Map</title>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="style.css">
+    <script type="text/javascript"
+      src="https://maps.googleapis.com/maps/api/js?sensor=true">
+    </script>
+    <script type="text/javascript">
+      function initialize() {
+        var mapOptions = {
+          center: { lat: 42.376, lng: -71.055},
+          zoom: 9
+        };
+         map = new google.maps.Map(document.getElementById('map-canvas'),
+            mapOptions);
+
+
+      }
+      google.maps.event.addDomListener(window, 'load', initialize);
+     
+      var map;
+      var myLat;
+      var myLon;
+      var distances = [];
+
+      function success(position) {
+          var latitude = position.coords.latitude;
+          var longitude = position.coords.longitude;
+
+	  myLat = latitude;
+	  myLon = longitude;
+
+	  var params = "login=Lucky&lat="+latitude+"&lng="+longitude;
+	  createMyMarker(latitude, longitude);
+	  sendRequest(params);
+
+      }
+      function error() {
+	  alert("Unable to retreive your location");
+      }
+
+      navigator.geolocation.getCurrentPosition(success, error);
+
+      function sendRequest(params) {
+
+      var xhr;
+ 
+      xhr = new XMLHttpRequest();
+      xhr.open("POST", "http://chickenofthesea.herokuapp.com/sendlocation", true);
+      xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+ 
+      xhr.onreadystatechange = function() {
+
+          if(xhr.readyState == 4 && xhr.status == 200){
+
+		var dict = JSON.parse(xhr.response);
+		var characters = dict["characters"];
+		var students = dict["students"];
+
+		var character;
+		for(i = 0; i < characters.length; i++){
+			character = characters[i];
+			createCharacterMarker(character);
+		}
+
+		var student;
+		for(i=0; i < students.length; i++){
+			student = students[i];
+			createStudentMarker(student);
+		}
+               document.getElementById("results").innerHTML = getDistanceHTML();
+          }
+      }
+	
+      xhr.send(params);
+     }
+
+     function createStudentMarker(student) {
+
+	var studName = student["login"];
+	var studTime = student["created_at"];
+	var studLat = student["lat"];
+	var studLon = student["lng"];
+
+	var marker = new google.maps.Marker({
+
+		position: { lat: studLat, lng: studLon}, 
+		map: map,
+		title: studName
+			
+        });
+
+        var infoWindow = new google.maps.InfoWindow({
+
+		content: "<p>"+studName+"</p>"+
+			 "<p>Latitude: "+studLat+"</p>"+
+			 "<p>Longitude: "+studLon+"</p>"+
+			 "<p>Timestamp: "+studTime+"</p>"
+
+	});
+
+	google.maps.event.addListener(marker, 'click', function() {
+    		infoWindow.open(map,marker);
+        });
+
+     }
+
+     function createCharacterMarker(character) {
+
+	var charName = character["name"];
+	var charLoc = character["loc"];
+	var charNote = charLoc["note"];
+	var charLat = charLoc["latitude"];
+	var charLon = charLoc["longitude"];
+	var image;
+	var realName;
+	var distance;
+
+	if(charName == "carmen"){
+		realName = "Carmen Sandiego";
+		image = "icons/carmen.png";
+	}
+	else if(charName == "nr"){
+		realName = "Norman Ramsey";
+		image = "icons/nr.png";
+	}
+	else if(charName == "waldo"){
+		realName = "Waldo";
+		image = "icons/waldo.png";
+	}
+	else if(charName == "snape"){
+		realName = "Professor Severus Snape";
+		image = "icons/snape.png";
+	}
+	else if(charName == "hescott"){
+		realName = "Professor Ben Hescott";
+		image = "icons/hescott.png";
+	}
+	else if(charName == "batman"){
+		realName = "Batman";
+		image = "icons/batman.png";
+	}
+
+	var marker = new google.maps.Marker({
+
+		position: { lat: charLat, lng: charLon}, 
+		map: map,
+		title: charName,
+		icon: image
+			
+        });
+
+        var infoWindow = new google.maps.InfoWindow({
+
+		content: "<p>"+realName+"</p>"+
+			 "<p>Latitude: "+charLat+"</p>"+
+			 "<p>Longitude: "+charLon+"</p>"+
+			 "<p>Note: "+charNote+"</p>"
+
+	});
+
+	google.maps.event.addListener(marker, 'click', function() {
+    		infoWindow.open(map,marker);
+        });
+
+	var polyCoords = [{lat: myLat, lng: myLon},{lat: charLat, lng: charLon}]
+
+	var polyline = new google.maps.Polyline({
+ 		path: polyCoords,
+   		geodesic: true,
+    		strokeColor: '#FF0000',
+    		strokeOpacity: 1.0,
+    		strokeWeight: 2
+  	});
+
+  	polyline.setMap(map);
+
+	distance = calculateDistance(charLat, charLon);
+	distances.push([realName, distance]);
+
+     }
+
+    function createMyMarker(myLat, myLon) {
+
+	var image = 'icons/bugs.jpeg';
+	var marker = new google.maps.Marker({
+
+		position: { lat: myLat, lng: myLon}, 
+		map: map,
+		title: "Lucky",
+		icon: image 
+			
+        });
+
+	var infoWindow = new google.maps.InfoWindow({
+
+		content: "<p>Lucky</p>"+
+			 "<p>Latitude: "+myLat+"</p>"+
+			 "<p>Longitude: "+myLon+"</p>"
+	});
+
+	google.maps.event.addListener(marker, 'click', function() {
+    		infoWindow.open(map,marker);
+        });
+
+     }
+
+  
+   function calculateDistance(charLat, charLon){
+
+	Number.prototype.toRad = function() {
+  		return this * Math.PI / 180;
+	}
+
+	var lat2 = charLat; 
+	var lon2 = charLon 
+	var lat1 = myLat; 
+	var lon1 = myLon; 
+
+	var R = 3959; // miles 
+	var x1 = lat2-lat1;
+	var dLat = x1.toRad();  
+	var x2 = lon2-lon1;
+	var dLon = x2.toRad();  
+	var a = Math.sin(dLat/2) * Math.sin(dLat/2) + 
+                Math.cos(lat1.toRad()) * Math.cos(lat2.toRad()) * 
+                Math.sin(dLon/2) * Math.sin(dLon/2);  
+	var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+	var d = R * c; 
+
+	return d;
+
+   }
+   
+   function getDistanceHTML(){
+
+	var distHTMLString = "<h3>Distances (miles)</h3>";
+	var charName;
+	var dist;
+
+   	distances.sort(sortByDistance);
+
+	for(i = 0; i < distances.length; i++){
+
+		charName = distances[i][0];
+		dist = distances[i][1];
+		distHTMLString = distHTMLString + "<p>"+charName+": "+dist+"</p>";
+	}
+
+	return distHTMLString;
+   } 
+
+   function sortByDistance(a, b) {
+        if (a[1] === b[1]) {
+             return 0;
+        }
+        else {
+             return (a[1] < b[1]) ? -1 : 1;
+        }
+   }
+
+    </script>
+
+  </head>
+  <body>
+<div id="map-canvas"></div>
+
+<p id="results"></p>
+ 
+  </body>
+</html>
